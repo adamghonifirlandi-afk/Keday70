@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-bg text-gray-100 antialiased;
+  }
+}
+
+@layer components {
+  /* Komponen Glassmorphism Mewah */
+  .glass-panel {
+    @apply bg-surface2/40 backdrop-blur-xl border border-white/5;
+  }
+  
+  .glass-card {
+    @apply bg-surface/70 backdrop-blur-md border border-white/[0.03] shadow-lg rounded-2xl transition-all duration-300 ease-out;
+  }
+  
+  .glass-card:hover {
+    @apply border-white/10 shadow-xl shadow-white/5 -translate-y-1;
+  }
+  
+  /* Minimalist scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-white/10 rounded-full;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-white/20;
+  }
+}
