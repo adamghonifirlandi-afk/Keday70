@@ -31,7 +31,7 @@ Sistem ini adalah dashboard Business Intelligence yang dirancang khusus untuk UM
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│                         PENGGUNA (Browser)                         │
+│                      PENGGUNA (Browser)                         │
 │                    http://localhost:5173                            │
 └──────────────────────────┬──────────────────────────────────────────┘
                            │
