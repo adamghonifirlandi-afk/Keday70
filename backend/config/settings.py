@@ -13,7 +13,13 @@ PAGE_ICON = ""
 LAYOUT = "wide"
 
 CLAUDE_API_KEY = os.getenv("CLAUDE_API_KEY", "")
-N8N_WEBHOOK_URL = os.getenv("N8N_WEBHOOK_URL") or "http://localhost:5678/webhook/chat-Keday70"
+N8N_WEBHOOK_URL = os.getenv("N8N_WEBHOOK_URL") or "http://localhost:5678/webhook/chat-Keday70-v2"
+
+# Production Configs
+GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
+GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
+ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
+ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "*")
 
 # ── Warna tema ────────────────────────────────────────────────────────────────
 COLOR_PRIMARY  = "#4ECCA3"

@@ -60,11 +60,13 @@ const fetchData = async () => {
 };
 
 onMounted(async () => {
-  // Sync Excel → SQLite setiap kali halaman di-reload/refresh
-  try {
-    await api.post('/reload');
-  } catch (e) {
-    console.error('Auto-sync error:', e);
+  // Sync Excel → SQLite setiap kali halaman di-reload/refresh (hanya di development)
+  if (import.meta.env.DEV) {
+    try {
+      await api.post('/reload');
+    } catch (e) {
+      console.error('Auto-sync error:', e);
+    }
   }
   await fetchOptions();
   fetchData();

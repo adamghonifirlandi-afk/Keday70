@@ -60,7 +60,7 @@ const sendMessage = async () => {
           </div>
           <div class="flex flex-col">
             <h3 class="font-bold text-white text-lg">Asisten AI</h3>
-            <p class="text-[11px] font-medium tracking-wide text-white/50 uppercase">Didukung n8n</p>
+            <p class="text-[11px] font-medium tracking-wide text-white/50 uppercase">AI Data Assistant</p>
           </div>
         </div>
         <button @click="emit('close')" class="text-white/50 hover:text-white rounded-xl p-2 hover:bg-white/10 transition-all border border-transparent hover:border-white/10">

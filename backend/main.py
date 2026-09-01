@@ -1,8 +1,9 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from contextlib import asynccontextmanager
 import uvicorn
-
+from backend.config.settings import ALLOWED_ORIGINS, ENVIRONMENT
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -12,20 +13,33 @@ async def lifespan(app: FastAPI):
     yield
     # ── Shutdown (cleanup jika perlu) ──
 
-
 app = FastAPI(
     title="Keday70 Dashboard API",
     version="2.0.0",
     lifespan=lifespan,
 )
 
+# Parse ALLOWED_ORIGINS
+if ALLOWED_ORIGINS == "*":
+    origins = ["*"]
+else:
+    origins = [o.strip() for o in ALLOWED_ORIGINS.split(",")]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], 
+    allow_origins=origins, 
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+if ENVIRONMENT == "production":
+    @app.exception_handler(Exception)
+    async def global_exception_handler(request: Request, exc: Exception):
+        return JSONResponse(
+            status_code=500,
+            content={"detail": "Terjadi kesalahan pada server. Silakan coba lagi nanti."},
+        )
 
 from backend.routers import dashboard, chat, ai_context
 
@@ -36,6 +50,10 @@ app.include_router(ai_context.router, prefix="/api/dashboard", tags=["ai"])
 @app.get("/")
 def read_root():
     return {"status": "ok", "message": "Backend Keday70 API is running!", "db": "SQLite"}
+
+@app.get("/health")
+def health_check():
+    return {"status": "ok", "environment": ENVIRONMENT}
 
 @app.post("/api/reload")
 def reload_data():
