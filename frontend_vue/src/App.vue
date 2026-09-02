@@ -132,7 +132,7 @@ const availableFilterModes = computed(() => ['Hari', 'Minggu', 'Bulan']);
         @toggleSidebar="isSidebarOpen = !isSidebarOpen"
       />
 
-      <main class="flex-1 overflow-x-hidden overflow-y-auto px-4 py-5 sm:px-6 lg:px-8">
+      <main class="flex-1 overflow-x-hidden overflow-y-auto px-3 py-4 sm:px-6 lg:px-8">
         <div v-if="isLoading && !dashboardData" class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           <div v-for="n in 4" :key="n" class="h-28 animate-pulse rounded-2xl border border-white/10 bg-surface/80"></div>
         </div>
@@ -141,7 +141,7 @@ const availableFilterModes = computed(() => ['Hari', 'Minggu', 'Bulan']);
           <div v-if="isLoading" class="pointer-events-none absolute inset-0 z-30 flex items-center justify-center bg-bg/30 backdrop-blur-[1px]">
             <div class="h-10 w-10 animate-spin rounded-full border-2 border-primary/30 border-t-primary"></div>
           </div>
-          <div class="space-y-5 lg:space-y-6">
+          <div class="space-y-4 sm:space-y-5 lg:space-y-6">
             <DashboardView v-if="currentPage === 'overview'" :data="dashboardData" :mode="currentMode" :year="currentYear" />
             <TransaksiView v-else-if="currentPage === 'transaksi'" :mode="currentMode" :filterValue="currentValue" :year="currentYear" />
             <PengeluaranView v-else-if="currentPage === 'pengeluaran'" :mode="currentMode" :filterValue="currentValue" :year="currentYear" />

@@ -38,26 +38,26 @@ const cards = computed(() => {
 </script>
 
 <template>
-  <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-5 w-full">
+  <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4 sm:gap-4 md:gap-5 w-full">
     <div
       v-for="(card, i) in cards"
       :key="i"
-      class="group relative overflow-hidden rounded-2xl border border-white/10 bg-surface/80 p-4 sm:p-5 shadow-[0_12px_30px_rgba(15,17,23,0.28)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-white/20 hover:shadow-[0_18px_40px_rgba(15,17,23,0.35)]"
+      class="group relative overflow-hidden rounded-2xl border border-white/10 bg-surface/80 p-4 shadow-[0_12px_30px_rgba(15,17,23,0.28)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-white/20 hover:shadow-[0_18px_40px_rgba(15,17,23,0.35)] sm:p-5"
     >
       <div :class="`absolute -right-8 -top-8 h-28 w-28 rounded-full blur-3xl transition-duration-300 ${colorStyleOptions[card.theme].glow}`"></div>
 
       <div class="relative z-10 flex items-start justify-between gap-3">
         <div class="min-w-0 flex-1">
-          <p class="text-[11px] font-semibold uppercase tracking-[0.14em] text-white/40">{{ card.title }}</p>
-          <p class="mt-3 text-xl font-bold tracking-[-0.04em] text-white tabular-nums sm:text-[1.7rem]">
+          <p class="text-[10px] font-semibold uppercase tracking-[0.14em] text-white/40 sm:text-[11px]">{{ card.title }}</p>
+          <p class="mt-2 text-lg font-bold tracking-[-0.04em] text-white tabular-nums sm:mt-3 sm:text-xl md:text-[1.7rem]">
             {{ card.value }}
           </p>
         </div>
 
         <div
-          :class="`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border ${colorStyleOptions[card.theme].iconBox}`"
+          :class="`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border sm:h-11 sm:w-11 ${colorStyleOptions[card.theme].iconBox}`"
         >
-          <component :is="card.icon" class="h-5 w-5" />
+          <component :is="card.icon" class="h-4 w-4 sm:h-5 sm:w-5" />
         </div>
       </div>
     </div>
