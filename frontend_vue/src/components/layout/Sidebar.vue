@@ -18,12 +18,12 @@ const navItems = [
     :class="[
       'fixed inset-y-0 left-0 z-50 flex flex-col border-r border-white/10 bg-surface/90 backdrop-blur-xl transition-transform duration-300 ease-out lg:static lg:w-64',
       isMobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
-      'w-[82%] max-w-[280px] sm:w-[260px] lg:w-64'
+      'w-[78%] max-w-[260px] sm:w-[250px] lg:w-64'
     ]"
   >
-    <div class="flex items-center justify-between border-b border-white/10 px-4 py-4 lg:px-5">
+    <div class="flex items-center justify-between border-b border-white/10 px-3 py-3 lg:px-5">
       <div class="flex items-center gap-3">
-        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-secondary font-bold text-bg shadow-[0_10px_24px_rgba(78,204,163,0.25)]">
+        <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-secondary font-bold text-bg shadow-[0_10px_24px_rgba(78,204,163,0.25)] lg:h-10 lg:w-10">
           K
         </div>
         <div class="hidden lg:block">
@@ -34,7 +34,7 @@ const navItems = [
 
       <button
         type="button"
-        class="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 text-white/60 transition hover:border-white/20 hover:text-white lg:hidden"
+        class="flex h-8 w-8 items-center justify-center rounded-xl border border-white/10 text-white/60 transition hover:border-white/20 hover:text-white lg:hidden"
         aria-label="Tutup menu"
         @click="emit('closeSidebar')"
       >
@@ -42,31 +42,31 @@ const navItems = [
       </button>
     </div>
 
-    <nav class="flex-1 space-y-2 px-3 py-4">
+    <nav class="flex-1 space-y-2 px-2.5 py-3">
       <button
         v-for="item in navItems"
         :key="item.key"
         type="button"
         @click="emit('navigate', item.key)"
         :class="[
-          'flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-left transition-all duration-200',
+          'flex w-full items-center gap-3 rounded-2xl px-3 py-2.5 text-left transition-all duration-200',
           currentPage === item.key
             ? 'border border-primary/20 bg-primary/10 text-primary shadow-[0_0_18px_rgba(78,204,163,0.12)]'
             : 'text-white/60 hover:bg-white/5 hover:text-white'
         ]"
       >
-        <component :is="item.icon" class="h-5 w-5 shrink-0" />
-        <span class="text-sm font-medium">{{ item.label }}</span>
+        <component :is="item.icon" class="h-4 w-4 shrink-0 lg:h-4 lg:w-4" />
+        <span class="text-[0.92rem] font-medium">{{ item.label }}</span>
       </button>
     </nav>
 
-    <div class="border-t border-white/10 p-3">
+    <div class="border-t border-white/10 p-2.5">
       <button
         type="button"
         @click="emit('openChat')"
-        class="flex w-full items-center justify-center gap-3 rounded-2xl border border-accent/20 bg-accent/10 px-4 py-3 text-sm font-medium text-accent transition hover:bg-accent/15 lg:justify-start"
+        class="flex w-full items-center justify-center gap-3 rounded-2xl border border-accent/20 bg-accent/10 px-4 py-2.5 text-sm font-medium text-accent transition hover:bg-accent/15 lg:justify-start"
       >
-        <Bot class="h-5 w-5" />
+        <Bot class="h-4 w-4 lg:h-4 lg:w-4" />
         <span>Tanya AI</span>
       </button>
     </div>
