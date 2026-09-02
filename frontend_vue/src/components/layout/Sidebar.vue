@@ -1,55 +1,73 @@
 <script setup>
-import { Home, ListOrdered, DollarSign, WalletCards, Package, Bot } from 'lucide-vue-next';
+import { Home, ListOrdered, DollarSign, WalletCards, Package, Bot, X } from 'lucide-vue-next';
 
-const props = defineProps({ currentPage: String });
-const emit = defineEmits(['navigate', 'openChat']);
+const props = defineProps({ currentPage: String, isMobileOpen: Boolean });
+const emit = defineEmits(['navigate', 'openChat', 'closeSidebar']);
+
+const navItems = [
+  { key: 'overview', label: 'Ringkasan', icon: Home },
+  { key: 'transaksi', label: 'Transaksi', icon: ListOrdered },
+  { key: 'pengeluaran', label: 'Pengeluaran', icon: WalletCards },
+  { key: 'labarugi', label: 'Laba Rugi', icon: DollarSign },
+  { key: 'produk', label: 'Produk', icon: Package },
+];
 </script>
 
 <template>
-  <aside class="w-20 lg:w-64 glass-panel border-r border-white/5 flex flex-col items-center lg:items-stretch py-6 transition-all duration-300 z-50">
-    <div class="mb-10 w-full flex justify-center lg:justify-start px-0 lg:px-6 items-center gap-3 cursor-pointer group">
-      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-primary to-secondary flex items-center justify-center shadow-lg shadow-primary/20 group-hover:scale-105 transition-transform">
-        <span class="text-xl font-bold text-bg">K</span>
+  <aside
+    :class="[
+      'fixed inset-y-0 left-0 z-50 flex flex-col border-r border-white/10 bg-surface/90 backdrop-blur-xl transition-transform duration-300 ease-out lg:static lg:w-64',
+      isMobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
+      'w-[82%] max-w-[280px] sm:w-[260px] lg:w-64'
+    ]"
+  >
+    <div class="flex items-center justify-between border-b border-white/10 px-4 py-4 lg:px-5">
+      <div class="flex items-center gap-3">
+        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-secondary font-bold text-bg shadow-[0_10px_24px_rgba(78,204,163,0.25)]">
+          K
+        </div>
+        <div class="hidden lg:block">
+          <h1 class="text-lg font-bold tracking-tight text-white">Keday70</h1>
+          <span class="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/40">Dashboard</span>
+        </div>
       </div>
-      <div class="hidden lg:flex flex-col">
-          <h1 class="font-bold text-xl tracking-tight text-white">Keday70</h1>
-          <span class="text-[10px] text-white/40 font-medium uppercase tracking-widest">Dashboard</span>
-      </div>
+
+      <button
+        type="button"
+        class="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 text-white/60 transition hover:border-white/20 hover:text-white lg:hidden"
+        aria-label="Tutup menu"
+        @click="emit('closeSidebar')"
+      >
+        <X class="h-4 w-4" />
+      </button>
     </div>
 
-    <!-- Navigation -->
-    <nav class="flex-1 px-3 space-y-2 w-full">
-      <button @click="emit('navigate', 'overview')" :class="['w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all group relative overflow-hidden', currentPage === 'overview' ? 'bg-primary/10 text-primary border border-primary/20 shadow-[0_0_15px_rgba(78,204,163,0.15)]' : 'text-white/50 hover:text-white/90 hover:bg-white/5']">
-        <div v-if="currentPage === 'overview'" class="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/10 to-primary/0 opacity-0 group-hover:opacity-100 transition-opacity translate-x-[-100%] group-hover:translate-x-[100%] duration-1000"></div>
-        <Home class="w-5 h-5 shrink-0" />
-        <span class="hidden lg:block font-medium">Ringkasan</span>
-      </button>
-
-      <button @click="emit('navigate', 'transaksi')" :class="['w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all group', currentPage === 'transaksi' ? 'bg-primary/10 text-primary border border-primary/20' : 'text-white/50 hover:text-white/90 hover:bg-white/5']">
-        <ListOrdered class="w-5 h-5 shrink-0" />
-        <span class="hidden lg:block font-medium">Transaksi</span>
-      </button>
-      
-      <button @click="emit('navigate', 'pengeluaran')" :class="['w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all group', currentPage === 'pengeluaran' ? 'bg-primary/10 text-primary border border-primary/20' : 'text-white/50 hover:text-white/90 hover:bg-white/5']">
-        <WalletCards class="w-5 h-5 shrink-0" />
-        <span class="hidden lg:block font-medium">Pengeluaran</span>
-      </button>
-      
-      <button @click="emit('navigate', 'labarugi')" :class="['w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all group', currentPage === 'labarugi' ? 'bg-primary/10 text-primary border border-primary/20' : 'text-white/50 hover:text-white/90 hover:bg-white/5']">
-        <DollarSign class="w-5 h-5 shrink-0" />
-        <span class="hidden lg:block font-medium">Laba Rugi</span>
-      </button>
-
-      <button @click="emit('navigate', 'produk')" :class="['w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all group', currentPage === 'produk' ? 'bg-primary/10 text-primary border border-primary/20' : 'text-white/50 hover:text-white/90 hover:bg-white/5']">
-        <Package class="w-5 h-5 shrink-0" />
-        <span class="hidden lg:block font-medium">Produk</span>
+    <nav class="flex-1 space-y-2 px-3 py-4">
+      <button
+        v-for="item in navItems"
+        :key="item.key"
+        type="button"
+        @click="emit('navigate', item.key)"
+        :class="[
+          'flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-left transition-all duration-200',
+          currentPage === item.key
+            ? 'border border-primary/20 bg-primary/10 text-primary shadow-[0_0_18px_rgba(78,204,163,0.12)]'
+            : 'text-white/60 hover:bg-white/5 hover:text-white'
+        ]"
+      >
+        <component :is="item.icon" class="h-5 w-5 shrink-0" />
+        <span class="text-sm font-medium">{{ item.label }}</span>
       </button>
     </nav>
-    
-    <div class="mt-auto px-4 w-full">
-       <button @click="emit('openChat')" class="w-full flex items-center justify-center lg:justify-start gap-3 px-4 py-3 rounded-xl bg-accent/20 text-accent hover:bg-accent/30 border border-accent/20 transition-all shadow-lg group">
-        <Bot class="w-5 h-5 shrink-0 group-hover:scale-110 transition-transform" />
-        <span class="hidden lg:block font-medium">Tanya AI</span>
+
+    <div class="border-t border-white/10 p-3">
+      <button
+        type="button"
+        @click="emit('openChat')"
+        class="flex w-full items-center justify-center gap-3 rounded-2xl border border-accent/20 bg-accent/10 px-4 py-3 text-sm font-medium text-accent transition hover:bg-accent/15 lg:justify-start"
+      >
+        <Bot class="h-5 w-5" />
+        <span>Tanya AI</span>
       </button>
     </div>
   </aside>

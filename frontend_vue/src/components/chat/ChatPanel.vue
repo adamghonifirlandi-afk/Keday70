@@ -38,11 +38,16 @@ const sendMessage = async () => {
       chatInput: userMsg,
       history: historyMessages
     });
-    
+
     const botReply = res.data?.output || 'Maaf, gagal memproses respons.';
     messages.value.push({ sender: 'bot', text: botReply });
   } catch (err) {
-    messages.value.push({ sender: 'bot', text: 'Oops! Terjadi kesalahan koneksi ke peladen AI.' });
+    const backendMessage = err?.response?.data?.detail;
+    const safeMessage = typeof backendMessage === 'string' && backendMessage.trim()
+      ? backendMessage
+      : 'Layanan AI sedang tidak tersedia. Silakan coba lagi nanti.';
+
+    messages.value.push({ sender: 'bot', text: safeMessage });
   } finally {
     isTyping.value = false;
   }

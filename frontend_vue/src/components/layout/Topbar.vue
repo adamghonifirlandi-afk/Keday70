@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue';
+import { Menu } from 'lucide-vue-next';
 
 const props = defineProps({
   mode: String,
@@ -16,106 +17,112 @@ const props = defineProps({
   }
 });
 
-const emit = defineEmits(['update:mode', 'update:value', 'update:year']);
+const emit = defineEmits(['update:mode', 'update:value', 'update:year', 'toggleSidebar']);
 
 const onValueChange = (e) => {
-   emit('update:value', e.target.value);
+  emit('update:value', e.target.value);
 };
 
-// Generate year list from backend options
 const yearOptions = computed(() => {
   return props.options?.years || [];
 });
 </script>
 
 <template>
-  <header class="glass-panel border-b border-white/5 min-h-20 flex items-center px-4 md:px-8 z-40 sticky top-0">
-    <div class="w-full flex items-center justify-between gap-4 md:gap-6 py-3">
-      <div class="flex items-center gap-4 min-w-0">
-        <h2 class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary hidden sm:block">{{ title }}</h2>
+  <header class="sticky top-0 z-40 border-b border-white/10 bg-bg/80 backdrop-blur-xl">
+    <div class="mx-auto flex w-full items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-8">
+      <div class="flex min-w-0 items-center gap-3">
+        <button
+          type="button"
+          class="flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-surface/80 text-white/80 transition hover:border-primary/30 hover:text-primary lg:hidden"
+          @click="emit('toggleSidebar')"
+          aria-label="Buka menu navigasi"
+        >
+          <Menu class="h-5 w-5" />
+        </button>
+
+        <div class="min-w-0">
+          <p class="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/40">Overview</p>
+          <h2 class="truncate text-lg font-semibold text-white sm:text-xl">{{ title }}</h2>
+        </div>
       </div>
 
-      <!-- Filter Bar (right aligned) -->
-      <div class="flex items-center gap-2 bg-black/30 p-1.5 rounded-2xl border border-white/10 shadow-inner ml-auto backdrop-blur-md">
-        
-        <!-- ═══ Mode Selector (Hari/Minggu/Bulan) ═══ -->
-        <div v-if="availableModes.length > 1" class="flex rounded-xl bg-surface2/60 p-1 gap-1">
-        <button 
-          v-for="m in availableModes" :key="m"
-          @click="emit('update:mode', m)"
-          :class="[
-            'px-3 md:px-4 py-1.5 text-xs md:text-sm font-semibold tracking-wide transition-all rounded-lg min-w-[60px] md:min-w-[72px]',
-            mode === m
-              ? 'bg-gradient-to-r from-primary/25 to-secondary/20 text-primary border border-primary/30 shadow-[0_0_10px_rgba(78,204,163,0.15)]'
-              : 'text-white/45 hover:bg-white/5 hover:text-white/85 border border-transparent'
-          ]"
-        >
-          {{ m }}
-        </button>
-        </div>
+      <div class="ml-auto flex max-w-full flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
+        <div class="flex items-center gap-2 rounded-2xl border border-white/10 bg-surface/80 p-1.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] backdrop-blur">
+          <div v-if="availableModes.length > 1" class="flex items-center gap-1 rounded-xl bg-surface2/80 p-1">
+            <button
+              v-for="m in availableModes"
+              :key="m"
+              @click="emit('update:mode', m)"
+              :class="[
+                'min-w-[62px] rounded-lg px-3 py-2 text-[11px] font-semibold tracking-wide transition sm:min-w-[72px] sm:text-xs',
+                mode === m
+                  ? 'bg-primary/12 text-primary shadow-[0_0_18px_rgba(78,204,163,0.15)]'
+                  : 'text-white/50 hover:bg-white/5 hover:text-white/80'
+              ]"
+            >
+              {{ m }}
+            </button>
+          </div>
 
-        <div class="w-px h-7 bg-white/10 mx-0.5"></div>
+          <div class="hidden h-7 w-px bg-white/10 sm:block"></div>
 
-        <div class="flex items-center gap-1.5 md:gap-2">
-          <!-- Input Option 1: Dropdown Bulan -->
+          <div class="flex items-center gap-2">
+            <select
+              v-if="mode === 'Bulan'"
+              :value="value"
+              @change="onValueChange"
+              class="h-10 w-[110px] rounded-xl border border-white/10 bg-surface2/70 px-3 text-[11px] text-white/90 outline-none transition focus:border-primary/40 focus:ring-2 focus:ring-primary/20 sm:w-[140px] sm:text-xs"
+            >
+              <option value="Semua">Semua Bulan</option>
+              <option v-for="opt in options?.months" :key="opt" :value="opt">{{ opt }}</option>
+              <option v-if="!options?.months?.length" value="">---</option>
+            </select>
+
+            <input
+              v-else-if="mode === 'Hari'"
+              type="date"
+              :value="value"
+              :min="options?.min_date"
+              :max="options?.max_date"
+              @change="onValueChange"
+              class="h-10 w-[120px] rounded-xl border border-white/10 bg-surface2/70 px-3 text-[11px] text-white/90 outline-none transition focus:border-primary/40 focus:ring-2 focus:ring-primary/20 sm:w-[150px] sm:text-xs calendar-input-dark"
+            />
+
+            <input
+              v-else-if="mode === 'Minggu'"
+              type="week"
+              :value="value"
+              :min="options?.min_week"
+              :max="options?.max_week"
+              @change="onValueChange"
+              class="h-10 w-[120px] rounded-xl border border-white/10 bg-surface2/70 px-3 text-[11px] text-white/90 outline-none transition focus:border-primary/40 focus:ring-2 focus:ring-primary/20 sm:w-[150px] sm:text-xs calendar-input-dark"
+            />
+          </div>
+
+          <div class="hidden h-7 w-px bg-white/10 sm:block"></div>
+
           <select
-            v-if="mode === 'Bulan'"
-            :value="value"
-            @change="onValueChange"
-            class="h-9 md:h-10 bg-surface2/80 text-white/90 text-xs md:text-sm rounded-xl focus:ring-2 focus:ring-primary/50 focus:border-primary block px-3 md:px-4 outline-none cursor-pointer border border-white/10 shadow-sm transition-all w-32 md:w-40"
+            :value="year"
+            @change="(e) => emit('update:year', e.target.value)"
+            class="h-10 w-[110px] rounded-xl border border-white/10 bg-surface2/70 px-3 text-[11px] text-white/90 outline-none transition focus:border-primary/40 focus:ring-2 focus:ring-primary/20 sm:w-[130px] sm:text-xs"
           >
-            <option value="Semua">Semua Bulan</option>
-            <option v-for="opt in options?.months" :key="opt" :value="opt">{{ opt }}</option>
-            <option v-if="!options?.months?.length" value="">---</option>
+            <option value="Semua">Semua Tahun</option>
+            <option v-for="y in yearOptions" :key="y" :value="y">{{ y }}</option>
           </select>
-
-          <!-- Input Option 2: Native HTML5 Date Calendar (Mode Hari) -->
-          <input 
-            v-else-if="mode === 'Hari'" 
-            type="date" 
-            :value="value"
-            :min="options?.min_date"
-            :max="options?.max_date" 
-            @change="onValueChange" 
-            class="h-9 md:h-10 bg-surface2/80 text-white/90 text-xs md:text-sm rounded-xl focus:ring-2 focus:ring-primary/50 border border-white/10 px-3 md:px-4 outline-none cursor-pointer w-32 md:w-40 calendar-input-dark" 
-          />
-
-          <!-- Input Option 3: Native HTML5 Week Picker (Mode Minggu) -->
-          <input 
-            v-else-if="mode === 'Minggu'" 
-            type="week" 
-            :value="value"
-            :min="options?.min_week"
-            :max="options?.max_week" 
-            @change="onValueChange" 
-            class="h-9 md:h-10 bg-surface2/80 text-white/90 text-xs md:text-sm rounded-xl focus:ring-2 focus:ring-primary/50 border border-white/10 px-3 md:px-4 outline-none cursor-pointer w-32 md:w-40 calendar-input-dark" 
-          />
         </div>
-
-        <div class="w-px h-7 bg-white/10 mx-0.5"></div>
-
-        <!-- ═══ Year Dropdown Selector ═══ -->
-        <select
-          :value="year"
-          @change="(e) => emit('update:year', e.target.value)"
-          class="h-9 md:h-10 bg-surface2/80 text-white/90 text-xs md:text-sm rounded-xl focus:ring-2 focus:ring-primary/50 focus:border-primary block px-3 md:px-4 outline-none cursor-pointer border border-white/10 shadow-sm transition-all w-28 md:w-32"
-        >
-          <option value="Semua">Semua Tahun</option>
-          <option v-for="y in yearOptions" :key="y" :value="y">{{ y }}</option>
-        </select>
       </div>
     </div>
   </header>
 </template>
 
 <style scoped>
-/* Inject CSS to style Webkit calendar picker icon to look white/dark-mode compatible */
 ::-webkit-calendar-picker-indicator {
-    filter: invert(1);
-    cursor: pointer;
-    opacity: 0.6;
+  filter: invert(1);
+  cursor: pointer;
+  opacity: 0.7;
 }
 ::-webkit-calendar-picker-indicator:hover {
-    opacity: 1;
+  opacity: 1;
 }
 </style>

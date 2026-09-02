@@ -20,14 +20,20 @@ def df_to_dict(df: pd.DataFrame) -> list:
     return json.loads(df.to_json(orient="records", date_format="iso"))
 
 
-def _parse_year(year: Optional[str]) -> Optional[int]:
-    """Parse year query param: 'Semua'/None → None, '2024' → 2024."""
-    if not year or year == "Semua":
+def _parse_year(year: Optional[str], default_year: Optional[int] = None) -> Optional[int]:
+    """Parse year query param.
+    - if omitted, fallback to default_year when provided
+    - 'Semua' => None
+    - '2024' => 2024
+    """
+    if year is None or year == "":
+        return default_year
+    if year == "Semua":
         return None
     try:
         return int(year)
     except (ValueError, TypeError):
-        return None
+        return default_year
 
 
 def _filter_by_year(data: dict[str, pd.DataFrame], year_int: Optional[int]) -> dict[str, pd.DataFrame]:
@@ -52,7 +58,7 @@ def get_dashboard_data(
     year: str = Query(None, description="Tahun filter: 2024, 2025, atau Semua")
 ):
     all_data = load_all()
-    year_int = _parse_year(year)
+    year_int = _parse_year(year, default_year=2024)
 
     try:
         filtered = apply_filter(all_data, mode, value, year=year_int)
@@ -129,7 +135,7 @@ def get_options(
     year: str = Query(None)
 ):
     all_data = load_all()
-    year_int = _parse_year(year)
+    year_int = _parse_year(year, default_year=2024)
     return get_filter_options(all_data, mode, year=year_int)
 
 @router.get("/products")
@@ -139,7 +145,7 @@ def get_products(
     year: str = Query(None)
 ):
     all_data = load_all()
-    year_int = _parse_year(year)
+    year_int = _parse_year(year, default_year=2024)
     filtered = apply_filter(all_data, mode, value, year=year_int)
     tx = filtered["transactions"]
     products = all_data["products"]
@@ -191,7 +197,7 @@ def get_profit(
 ):
     import calendar
     all_data = load_all()
-    year_int = _parse_year(year)
+    year_int = _parse_year(year, default_year=2024)
     filtered = apply_filter(all_data, mode, value, year=year_int)
     tx = filtered["transactions"]
     belanja = filtered["belanja"]
@@ -406,7 +412,7 @@ def get_transactions(
     year: str = Query(None)
 ):
     all_data = load_all()
-    year_int = _parse_year(year)
+    year_int = _parse_year(year, default_year=2024)
     filtered = apply_filter(all_data, mode, value, year=year_int)
     tx = filtered["transactions"]
 
@@ -494,7 +500,7 @@ def get_expenses(
 ):
     import calendar
     all_data = load_all()
-    year_int = _parse_year(year)
+    year_int = _parse_year(year, default_year=2024)
     filtered = apply_filter(all_data, mode, value, year=year_int)
     tx = filtered["transactions"]
     belanja = filtered["belanja"]
